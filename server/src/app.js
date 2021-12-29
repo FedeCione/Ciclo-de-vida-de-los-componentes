@@ -2,21 +2,6 @@ const express = require('express');
 const path = require('path');
 const methodOverride = require('method-override');
 const app = express();
-//cors
-const cors = require("cors");
-var corsOptions = {
-  origin: "*"
-};
-
-app.use(cors(corsOptions));
-let allowCrossDomain = function(req, res, next) {
-    res.header('Access-Control-Allow-Origin', "*");
-    res.header("Access-Control-Allow-Methods", "OPTIONS, POST, GET, PUT, DELETE");
-    res.header('Access-Control-Allow-Headers', "*");
-    res.header("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With")
-    next();
-  }
-app.use(allowCrossDomain);
 
 
 //Ejecuto el llamado a mis rutas
@@ -48,6 +33,12 @@ app.use('/', indexRouter);
 app.use(moviesRoutes);
 app.use(genresRoutes);
 //Aquí creo la colección de mis recursos de movies (APIs)
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+  });
+
 app.use('/api/movies',apiMoviesRouter);
 app.use('/api/actors',apiActorsRouter);
 app.use('/api/genres',apiGenresRouter);
