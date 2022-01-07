@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const methodOverride = require('method-override');
+const request = require('request');
 const app = express();
 
 
@@ -23,6 +24,12 @@ app.set('view engine', 'ejs');
 
 app.use(express.static(path.resolve(__dirname, '../public')));
 
+// Express cors proxy server solution
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+    next();
+  });
+
 //URL encode  - Para que nos pueda llegar la información desde el formulario al req.body
 app.use(express.urlencoded({ extended: false }));
 
@@ -33,12 +40,6 @@ app.use('/', indexRouter);
 app.use(moviesRoutes);
 app.use(genresRoutes);
 //Aquí creo la colección de mis recursos de movies (APIs)
-app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    next();
-  });
-
 app.use('/api/movies',apiMoviesRouter);
 app.use('/api/actors',apiActorsRouter);
 app.use('/api/genres',apiGenresRouter);
